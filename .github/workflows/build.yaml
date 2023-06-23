@@ -23,4 +23,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push Docker image
-        run: docker push your_image_name
+        run: docker push ayushishu/your_image_name
