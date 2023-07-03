@@ -11,11 +11,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Generate image version
-        id: version
-        run: echo "::set-output name=VERSION::$(git rev-parse --short HEAD)"
+     
       - name: Build Docker image
-        run: docker build -t ${{vars.REPOSITORY}}/${{vars.IMAGENAME}}:${{ steps.version.outputs.VERSION }} . 
+        run: docker build -t ${{vars.REPOSITORY}}/${{vars.IMAGENAME}} . 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
