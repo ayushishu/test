@@ -27,7 +27,7 @@ jobs:
         shell: bash
       - name: Test2   
         run: |
-             docker run --name test-robot --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:odl-container --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
+             docker run --name test-robot --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:host.docker.internal --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
 
         
       - name: Log in to Docker Hub
