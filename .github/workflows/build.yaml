@@ -8,11 +8,6 @@ on:
 jobs:
   build-and-run-docker-image:
     runs-on: ubuntu-latest
-    
-    services:
-      opendaylight:
-        image: opendaylight/opendaylight:0.18.1
-        options: --name opendaylight --network mynetwork
 
     steps:
       - name: Checkout repository
