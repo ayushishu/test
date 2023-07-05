@@ -6,14 +6,15 @@ on:
       - main
 
 jobs:
-  Docker-Iamges-build-odl-java-code:
-  runs-on: ubuntu-latest
-  steps:
+  Docker-Images-build-odl-java-code:
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2
      
       - name: Build Docker image
-        run: docker build -t ${{vars.REPOSITORY}}/${{vars.IMAGENAME}} .
+        run: docker build -t ${{ env.REPOSITORY }}/${{ env.IMAGENAME }} .
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -21,21 +22,22 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push Docker image
-        run: docker push ${{ vars.REPOSITORY}}/${{vars.IMAGENAME}} 
+        run: docker push ${{ env.REPOSITORY }}/${{ env.IMAGENAME }} 
 
-  Docker-iamge-build-robot:
-  run-on: ubuntu-latest
-   steps:
+  Docker-image-build-robot:
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v2
      
       - name: Build Docker image
-        run: docker build -t ${{vars.REPOSITORY}}/${{vars.IMAGENAME}} /robot/
-    
+        run: docker build -t ${{ env.REPOSITORY }}/${{ env.IMAGENAME }} ./robot/
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
       - name: Push Docker image
-        run: docker push ${{ vars.REPOSITORY}}/${{vars.IMAGENAME}} 
+        run: docker push ${{ env.REPOSITORY }}/${{ env.IMAGENAME }}
