@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-Test-Robot-docker-image:
+  Build-And-Test-Robot-Docker-Image:
     runs-on: ubuntu-latest
 
     services:
