@@ -7,8 +7,8 @@ on:
 
 jobs:
   Docker-Iamges-build-odl-java-code:
-    runs-on: ubuntu-latest
-    steps:
+  runs-on: ubuntu-latest
+  steps:
       - name: Checkout repository
         uses: actions/checkout@v2
      
@@ -24,8 +24,8 @@ jobs:
         run: docker push ${{ vars.REPOSITORY}}/${{vars.IMAGENAME}} 
 
   Docker-iamge-build-robot:
-    run-on: ubuntu-latest
-    steps:
+  run-on: ubuntu-latest
+   steps:
       - name: Checkout repository
         uses: actions/checkout@v2
      
