@@ -6,14 +6,33 @@ on:
       - main
 
 jobs:
-  build:
+  Docker Iamges build odl-java-code:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
      
       - name: Build Docker image
-        run: docker build -t ${{vars.REPOSITORY}}/${{vars.IMAGENAME}} robot/
+        run: docker build -t ${{vars.REPOSITORY}}/${{vars.IMAGENAME}} .
+    
+        - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push Docker image
+        run: docker push ${{ vars.REPOSITORY}}/${{vars.IMAGENAME}} 
+
+  Docker Iamge build robot :
+    run-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+     
+      - name: Build Docker image
+        run: docker build -t ${{vars.REPOSITORY}}/${{vars.IMAGENAME}} /robot/
+    
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
