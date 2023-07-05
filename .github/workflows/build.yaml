@@ -15,7 +15,7 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} .
       - name: Test 
-        run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -d 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install"  
+        run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -d 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
