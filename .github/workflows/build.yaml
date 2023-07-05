@@ -16,8 +16,10 @@ jobs:
         run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME }} .
       
       - name: Test
-        run: docker run --name ${{ vars.IMAGENAME }} ${{ vars.IMAGENAME }}
-      
+        run: docker run --name ${{ vars.IMAGENAME }} ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME}} 
+      - name: Execute Commands inside Docker container
+        run: |
+          docker exec ${{ vars.IMAGENAME }} echo ayush
 
 
       # - name: Log in to Docker Hub
@@ -29,20 +31,20 @@ jobs:
       # - name: Push Docker image
       #   run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME}} 
 
-  Docker-image-build-robot:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  # Docker-image-build-robot:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
      
-      - name: Build Docker image
-        run: docker build -t ${{  vars.REPOSITORY }}/${{ vars.IMAGENAME }} robot/
+  #     - name: Build Docker image
+  #       run: docker build -t ${{  vars.REPOSITORY }}/${{ vars.IMAGENAME }} robot/
       
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Log in to Docker Hub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Push Docker image
-        run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME }}
+  #     - name: Push Docker image
+  #       run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME }}
