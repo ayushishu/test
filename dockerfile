@@ -27,3 +27,5 @@ RUN mkdir -p /root/.m2 \
     && wget -q -O /tmp/settings.xml https://raw.githubusercontent.com/opendaylight/odlparent/master/settings.xml \
     && mv /tmp/settings.xml /root/.m2/settings.xml
 
+CMD tail -f /dev/null  
+
