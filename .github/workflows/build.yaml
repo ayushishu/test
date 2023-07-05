@@ -13,9 +13,11 @@ jobs:
         uses: actions/checkout@v2
      
       - name: Build Docker image
-        run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} .
+        run: docker build -t ${{ secrets.REPOSITORY }}/${{ secrets.IMAGENAME1 }} .
+      
       - name: Test 
-        run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
+        run: docker run ${{ secrets.REPOSITORY }}/${{ secrets.IMAGENAME1 }} bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
+      
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -23,7 +25,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push Docker image
-        run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME1}} 
+        run: docker push ${{ secrets.REPOSITORY }}/${{ secrets.IMAGENAME1 }} 
+
   Build-And-Test-Robot-Docker-Image:
     runs-on: ubuntu-latest
 
@@ -40,11 +43,11 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Build Docker image
-        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/        
+        run: docker build -t ${{ secrets.REPOSITORY }}/${{ secrets.IMAGENAME2 }} robot/        
 
       - name: Test   
         run: |
-          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:opendaylight --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
+          docker run --network container:odl-container ${{ secrets.REPOSITORY }}/${{ secrets.IMAGENAME2 }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:opendaylight --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
@@ -53,4 +56,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Push Docker image
-        run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }}
+        run: docker push ${{ secrets.REPOSITORY }}/${{ secrets.IMAGENAME2 }}
