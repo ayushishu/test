@@ -17,7 +17,7 @@ jobs:
         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME }} robot/
       
       - name: Test
-        run: docker run -d -p 8181:8181 --env FEATURES=odl-restconf,odl-netconf-topology opendaylight/opendaylight:0.18.1 && docker run ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic &&  robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:host.docker.internal --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot
+        run: docker run -d -p 8181:8181 --env FEATURES=odl-restconf,odl-netconf-topology opendaylight/opendaylight:0.18.1 && docker run ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic &&  robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:host.docker.internal --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
         
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
