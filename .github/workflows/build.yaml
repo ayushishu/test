@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
      
       - name: Build Docker image
-        run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} .
+        run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} /ODL-Java-Code/Ubuntu/
       - name: Test 
         run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
       - name: Log in to Docker Hub
@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Build Docker image
-        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/        
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} Robot/        
 
       - name: Test   
         run: |

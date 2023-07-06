@@ -1,0 +1,34 @@
+FROM centos:latest
+
+# Add  mirrorlist
+RUN cd /etc/yum.repos.d/
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
+# Install necessary dependencies
+RUN yum update -y && yum install -y \
+    wget \
+    git
+
+# Add OpenJDK 17
+RUN yum install -y java-17-openjdk java-17-openjdk-devel
+
+# Download and install Maven 3.8
+RUN wget -q https://downloads.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz && \
+    tar -xf apache-maven-3.8.8-bin.tar.gz -C /opt && \
+    rm apache-maven-3.8.8-bin.tar.gz 
+
+# Set environment variables
+ENV MAVEN_HOME=/opt/apache-maven-3.8.8
+ENV PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH
+
+# Verify installations
+RUN java -version && \
+    javac -version && \
+    mvn -v
+
+# Add Maven settings.xml file
+RUN mkdir -p /root/.m2 \
+    && wget -q -O /tmp/settings.xml https://raw.githubusercontent.com/opendaylight/odlparent/master/settings.xml \
+    && mv /tmp/settings.xml /root/.m2/settings.xml
+
