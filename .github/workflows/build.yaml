@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Docker-Images-build-odl-java-code:
+  Docker-Images-Build-Odl-Java-Code:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
