@@ -1,38 +1,46 @@
 # Base image
-FROM centos:8
-
-# Update system and install dependencies
-RUN dnf -y update && \
-    dnf -y install epel-release git make automake cmake3 gcc-c++ libpcap-devel
-
-# Install Python 3 and pip
-RUN dnf -y install python3 python3-pip && \
-    pip3 install -U pip
-
-# Install robot dependencies
-RUN dnf -y install postgresql-devel python3-docker python3-netaddr python38-pip && \
-    pip3 install matplotlib
-
+FROM centos:centos8
+# Add  mirrorlist
+RUN cd /etc/yum.repos.d/
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+# Install system update dependencies
+RUN yum update -y
+RUN yum install -y epel-release
+RUN yum install -y git
+# Install robot dependencies for CentOS 8
+RUN yum install -y postgresql-devel python3-docker python3-netaddr python38-pip
+RUN yum install python3-pip
+RUN pip3 install -U pip
+RUN pip install matplotlib 
 # Install lispflowmapping dependencies
-RUN dnf -y install boost-devel libxml2-devel libxslt-devel
-
+RUN yum install -y boost-devel libxml2-devel libxslt-devel
+# Install libpcap-devel (lispflowmapping dependencies)
+RUN dnf -y --enablerepo=powertools install libpcap-devel
+RUN dnf -y install libpcap-devel
+# Install lispflowmapping dependencies for CentOS 8
+RUN yum install -y python3-docker python3-netaddr
+#make
+RUN yum install -y make   
 # Clone and install udpreplay
-RUN git clone https://github.com/ska-sa/udpreplay.git /tmp/udpreplay && \
-    cd /tmp/udpreplay && \
-    ./bootstrap.sh && \
-    ./configure && \
-    make && \
-    make install && \
+RUN git clone https://github.com/ska-sa/udpreplay.git /tmp/udpreplay
+# Install autoconf, gcc-c++ and cmake 
+RUN yum install -y automake cmake3 gcc-c++
+# Run bootstrap.sh script
+RUN cd /tmp/udpreplay && \
+    ./bootstrap.sh
+# Run configure script
+RUN cd /tmp/udpreplay && \
+ ./configure 
+# Run make
+RUN cd /tmp/udpreplay && \cd /tmp/udpreplay && \
+    make
+# Install udpreplay to /usr/local/bin/udpreplay    
+RUN cd /tmp/udpreplay && \
+    cp udpreplay /usr/local/bin/udpreplay && \
+    chmod 0755 /usr/local/bin/udpreplay && \
     cd / && \
     rm -rf /tmp/udpreplay
-
 # Clean-up
-RUN dnf -y remove epel-release git make automake cmake3 gcc-c++ && \
-    dnf clean all
-
-# Set the working directory
-WORKDIR /
-
-# Define the command to run within the container
-CMD ["echo", "Docker container built successfully!"]
-
+RUN rm -rf /tmp/udpreplay && \
+    yum clean all
