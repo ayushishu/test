@@ -75,15 +75,18 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Test with tox
       run: tox
+      
+      
   actionlints:
     runs-on: ubuntu-latest
     steps:
-      - name: Download actionlint
-        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-        shell: bash
-      - name: Check workflow files
-        run: ${{ steps.get_actionlint.outputs.executable }} -color
-        shell: bash
+     - name: actionlint
+  # You may pin to the exact commit or the version.
+  # uses: raven-actions/actionlint@d6c9e3222b489401880e866bc6715049773b63a3
+       uses: raven-actions/actionlint@v1.0.2
+     - name: Check workflow files
+       run: ${{ steps.get_actionlint.outputs.executable }} -color
+       shell: bash
 
 
 #   jjb-validation:
