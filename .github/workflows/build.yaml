@@ -81,8 +81,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: actionlint
-  # You may pin to the exact commit or the version.
-  # uses: raven-actions/actionlint@d6c9e3222b489401880e866bc6715049773b63a3
        uses: raven-actions/actionlint@v1.0.2
      - name: Check workflow files
        run: ${{ steps.get_actionlint.outputs.executable }} -color
