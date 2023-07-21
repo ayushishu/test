@@ -95,7 +95,16 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }}
 
+  Docker-Images-Build-aaa:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa bash -c 'git clone "https://github.com/opendaylight/aaa.git" && cd /aaa && mvn clean install'  
 #   prepare:
 #     runs-on: ubuntu-latest
 #     steps:
