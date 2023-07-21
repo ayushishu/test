@@ -4,142 +4,142 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      GERRIT_BRANCH:
-        description: "Branch that change is against"
-        required: true
-        type: string
-      GERRIT_CHANGE_ID:
-        description: "The ID for the change"
-        required: true
-        type: string
-      GERRIT_CHANGE_NUMBER:
-        description: "The Gerrit number"
-        required: true
-        type: string
-      GERRIT_CHANGE_URL:
-        description: "URL to the change"
-        required: true
-        type: string
-      GERRIT_EVENT_TYPE:
-        description: "Type of Gerrit event"
-        required: true
-        type: string
-      GERRIT_PATCHSET_NUMBER:
-        description: "The patch number for the change"
-        required: true
-        type: string
-      GERRIT_PATCHSET_REVISION:
-        description: "The revision sha"
-        required: true
-        type: string
-      GERRIT_PROJECT:
-        description: "Project in Gerrit"
-        required: true
-        type: string
-      GERRIT_REFSPEC:
-        description: "Gerrit refspec of change"
-        required: true
-        type: string  
-concurrency:
-  group: ${{ github.event.inputs.GERRIT_CHANGE_ID || github.run_id }}
-  cancel-in-progress: true
+#   workflow_dispatch:
+#     inputs:
+#       GERRIT_BRANCH:
+#         description: "Branch that change is against"
+#         required: true
+#         type: string
+#       GERRIT_CHANGE_ID:
+#         description: "The ID for the change"
+#         required: true
+#         type: string
+#       GERRIT_CHANGE_NUMBER:
+#         description: "The Gerrit number"
+#         required: true
+#         type: string
+#       GERRIT_CHANGE_URL:
+#         description: "URL to the change"
+#         required: true
+#         type: string
+#       GERRIT_EVENT_TYPE:
+#         description: "Type of Gerrit event"
+#         required: true
+#         type: string
+#       GERRIT_PATCHSET_NUMBER:
+#         description: "The patch number for the change"
+#         required: true
+#         type: string
+#       GERRIT_PATCHSET_REVISION:
+#         description: "The revision sha"
+#         required: true
+#         type: string
+#       GERRIT_PROJECT:
+#         description: "Project in Gerrit"
+#         required: true
+#         type: string
+#       GERRIT_REFSPEC:
+#         description: "Gerrit refspec of change"
+#         required: true
+#         type: string  
+# concurrency:
+#   group: ${{ github.event.inputs.GERRIT_CHANGE_ID || github.run_id }}
+#   cancel-in-progress: true
 
 jobs:
-#   Docker-Images-Build-Odl-Java-Code:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
+  Docker-Images-Build-Odl-Java-Code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
      
-#       - name: Build Docker image
-#         run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} ODL-Java-Code/Ubuntu/
-#       - name: Test 
-#         run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} ODL-Java-Code/Ubuntu/
+      - name: Test 
+        run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#       - name: Push Docker image
-#         run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME1}} 
-#   Build-And-Test-Robot-Docker-Image:
+      - name: Push Docker image
+        run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME1}} 
+  Build-And-Test-Robot-Docker-Image:
+    runs-on: ubuntu-latest
+
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/        
+
+      - name: Test   
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:opendaylight --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Push Docker image
+        run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }}
+
+
+#   prepare:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Clear votes
+#         uses: lfit/gerrit-review-action@v0.3
+#         with:
+#           host: ${{ vars.GERRIT_SERVER }}
+#           username: ${{ vars.GERRIT_SSH_USER }}
+#           key: ${{ secrets.GERRIT_SSH_PRIVKEY }}
+#           known_hosts: ${{ vars.GERRIT_KNOWN_HOSTS }}
+#           gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
+#           gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
+#           vote-type: clear
+#       - name: Allow replication
+#         run: sleep 10s
+
+#   tox-verify:
 #     runs-on: ubuntu-latest
 
-#     services:
-#       opendaylight:
-#         image: opendaylight/opendaylight:0.18.1
-#         env:
-#           FEATURES: odl-restconf,odl-netconf-topology
-#         ports:
-#           - 8181:8181
-#         options: --name odl-container
 #     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-      
-#       - name: Build Docker image
-#         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/        
-
-#       - name: Test   
-#         run: |
-#           docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:opendaylight --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-#       - name: Push Docker image
-#         run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }}
-
-
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clear votes
-        uses: lfit/gerrit-review-action@v0.3
-        with:
-          host: ${{ vars.GERRIT_SERVER }}
-          username: ${{ vars.GERRIT_SSH_USER }}
-          key: ${{ secrets.GERRIT_SSH_PRIVKEY }}
-          known_hosts: ${{ vars.GERRIT_KNOWN_HOSTS }}
-          gerrit-change-number: ${{ inputs.GERRIT_CHANGE_NUMBER }}
-          gerrit-patchset-number: ${{ inputs.GERRIT_PATCHSET_NUMBER }}
-          vote-type: clear
-      - name: Allow replication
-        run: sleep 10s
-
-  tox-verify:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python "3.11"
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install tox tox-gh-actions
-    - name: Test with tox
-      run: tox
+#     - uses: actions/checkout@v3
+#     - name: Set up Python "3.11"
+#       uses: actions/setup-python@v4
+#       with:
+#         python-version: "3.11"
+#     - name: Install dependencies
+#       run: |
+#         python -m pip install --upgrade pip
+#         python -m pip install tox tox-gh-actions
+#     - name: Test with tox
+#       run: tox
       
       
-  actionlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download actionlint
-        id: get_actionlint
-        run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-        shell: bash
-      - name: Check workflow files
-        run: ${{ steps.get_actionlint.outputs.executable }} -color
-        shell: bash
+#   actionlint:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Download actionlint
+#         id: get_actionlint
+#         run: bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+#         shell: bash
+#       - name: Check workflow files
+#         run: ${{ steps.get_actionlint.outputs.executable }} -color
+#         shell: bash
 
 
 #   jjb-validation:
