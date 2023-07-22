@@ -47,131 +47,131 @@ on:
 #   cancel-in-progress: true
 #-----
 jobs:
-#   Docker-Images-Build-Odl-Java-Code:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
+  Docker-Images-Build-Odl-Java-Code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
      
-#       - name: Build Docker image
-#         run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} ODL-Java-Code/Ubuntu/
-#       - name: Test 
-#         run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} ODL-Java-Code/Ubuntu/
+      - name: Test 
+        run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }} bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#       - name: Push Docker image
-#         run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME1}} 
-#   Build-And-Test-Robot-Docker-Image:
-#     runs-on: ubuntu-latest
+      - name: Push Docker image
+        run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME1}} 
+  Build-And-Test-Robot-Docker-Image:
+    runs-on: ubuntu-latest
 
-#     services:
-#       opendaylight:
-#         image: opendaylight/opendaylight:0.18.1
-#         env:
-#           FEATURES: odl-restconf,odl-netconf-topology
-#         ports:
-#           - 8181:8181
-#         options: --name odl-container
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
       
-#       - name: Build Docker image
-#         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/        
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/        
 
-#       - name: Test   
-#         run: |
-#           docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:opendaylight --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Test   
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c 'yum install -y git python3-pip && pip3 install robotframework robotframework-extendedrequestslibrary && git clone https://github.com/opendaylight/integration-test.git && cd integration-test/csit/suites/integration/basic && robot -L debug --variable USER_HOME:/home/centos --variable DEFAULT_LINUX_PROMPT:\$ --variable ODL_SYSTEM_IP:opendaylight --variable ODL_SYSTEM_USER:centos ./restconf_modules.robot'
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-#       - name: Push Docker image
-#         run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }}
+      - name: Push Docker image
+        run: docker push ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }}
 
-#   Docker-Images-Build-aaa:
-#         runs-on: ubuntu-latest
-#         steps:
-#           - name: Checkout repository
-#             uses: actions/checkout@v2
+  Docker-Images-Build-aaa:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
-#           - name: Build Docker image
-#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa ODL-Java-Code/Ubuntu/
-#           - name: Test 
-#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa bash -c 'git clone "https://github.com/opendaylight/aaa.git" && cd /aaa && mvn clean install'  
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa bash -c 'git clone "https://github.com/opendaylight/aaa.git" && cd /aaa && mvn clean install'  
   
-#   Docker-Images-Build-yangtools:
-#         runs-on: ubuntu-latest
-#         steps:
-#           - name: Checkout repository
-#             uses: actions/checkout@v2
+  Docker-Images-Build-yangtools:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
-#           - name: Build Docker image
-#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools ODL-Java-Code/Ubuntu/
-#           - name: Test 
-#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools bash -c 'git clone "https://github.com/opendaylight/yangtools.git" && cd /yangtools && mvn clean install'  
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools bash -c 'git clone "https://github.com/opendaylight/yangtools.git" && cd /yangtools && mvn clean install'  
    
-#   Docker-Images-Build-netconf:
-#         runs-on: ubuntu-latest
-#         steps:
-#           - name: Checkout repository
-#             uses: actions/checkout@v2
+  Docker-Images-Build-netconf:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
-#           - name: Build Docker image
-#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:netconf ODL-Java-Code/Ubuntu/
-#           - name: Test 
-#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:netconf bash -c 'git clone "https://github.com/opendaylight/netconf.git" && cd /netconf && mvn clean install'  
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:netconf ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:netconf bash -c 'git clone "https://github.com/opendaylight/netconf.git" && cd /netconf && mvn clean install'  
   
-#   Docker-Images-Build-odlparent:
-#         runs-on: ubuntu-latest
-#         steps:
-#           - name: Checkout repository
-#             uses: actions/checkout@v2
+  Docker-Images-Build-odlparent:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
-#           - name: Build Docker image
-#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent ODL-Java-Code/Ubuntu/
-#           - name: Test 
-#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent bash -c 'git clone "https://github.com/opendaylight/odlparent.git" && cd /odlparent && mvn clean install'  
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent bash -c 'git clone "https://github.com/opendaylight/odlparent.git" && cd /odlparent && mvn clean install'  
 
  
-#   Docker-Images-Build-mdsal:
-#         runs-on: ubuntu-latest
-#         steps:
-#           - name: Checkout repository
-#             uses: actions/checkout@v2
+  Docker-Images-Build-mdsal:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
-#           - name: Build Docker image
-#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:mdsal ODL-Java-Code/Ubuntu/
-#           - name: Test 
-#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:mdsal bash -c 'git clone "https://github.com/opendaylight/mdsal.git" && cd /mdsal && mvn clean install'  
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:mdsal ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:mdsal bash -c 'git clone "https://github.com/opendaylight/mdsal.git" && cd /mdsal && mvn clean install'  
   
-#   Docker-Images-Build-controller:
-#         runs-on: ubuntu-latest
-#         steps:
-#           - name: Checkout repository
-#             uses: actions/checkout@v2
+  Docker-Images-Build-controller:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
-#           - name: Build Docker image
-#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller ODL-Java-Code/Ubuntu/
-#           - name: Test 
-#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller bash -c 'git clone "https://github.com/opendaylight/controller.git" && cd /controller && mvn clean install'  
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller bash -c 'export JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64 &&  git clone "https://github.com/opendaylight/controller.git" && cd /controller && mvn clean install'  
    
-#   Docker-Images-Build-infrautils:
-#         runs-on: ubuntu-latest
-#         steps:
-#           - name: Checkout repository
-#             uses: actions/checkout@v2
+  Docker-Images-Build-infrautils:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
-#           - name: Build Docker image
-#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:infrautils ODL-Java-Code/Ubuntu/
-#           - name: Test 
-#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:infrautils bash -c 'git clone "https://github.com/opendaylight/infrautils.git" && cd /infrautils && mvn clean install'  
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:infrautils ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:infrautils bash -c 'git clone "https://github.com/opendaylight/infrautils.git" && cd /infrautils && mvn clean install'  
 
   daexim:
         runs-on: ubuntu-latest
