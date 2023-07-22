@@ -173,6 +173,16 @@ jobs:
           - name: Test 
             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:infrautils bash -c 'git clone "https://github.com/opendaylight/infrautils.git" && cd /infrautils && mvn clean install'  
 
+  daexim:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:daexim ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:daexim bash -c 'git clone "https://github.com/opendaylight/daexim.git" && cd /daexim && mvn clean install'  
 
 
 #   prepare:
