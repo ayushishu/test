@@ -139,7 +139,39 @@ jobs:
           - name: Test 
             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent bash -c 'git clone "https://github.com/opendaylight/odlparent.git" && cd /odlparent && mvn clean install'  
 
+ 
+  Docker-Images-Build-mdsal:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
 
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:mdsal ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:mdsal bash -c 'git clone "https://github.com/opendaylight/mdsal.git" && cd /mdsal && mvn clean install'  
+  
+  Docker-Images-Build-controller:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller bash -c 'git clone "https://github.com/opendaylight/controller.git" && cd /controller && mvn clean install'  
+   
+  Docker-Images-Build-infrautils:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:infrautils ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:infrautils bash -c 'git clone "https://github.com/opendaylight/infrautils.git" && cd /infrautils && mvn clean install'  
 
 
 
