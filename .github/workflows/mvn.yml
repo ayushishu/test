@@ -101,3 +101,15 @@ jobs:
             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping ODL-Java-Code/Ubuntu/
           - name: Test 
             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping bash -c 'git clone "https://github.com/opendaylight/lispflowmapping.git" && cd /lispflowmapping && mvn clean install'  
+  
+  Docker-Images-Build-controller:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller bash -c 'export JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64 &&  git clone "https://github.com/opendaylight/controller.git" && cd /controller && mvn clean install'  
+   
