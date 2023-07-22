@@ -1,0 +1,69 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  daexim:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:daexim ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:daexim bash -c 'git clone "https://github.com/opendaylight/daexim.git" && cd /daexim && mvn clean install'  
+
+  serviceutils:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:serviceutils ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:serviceutils bash -c 'git clone "https://github.com/opendaylight/serviceutils.git" && cd /serviceutils && mvn clean install'  
+  openflowplugin:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:openflowplugin ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:openflowplugin bash -c 'git clone "https://github.com/opendaylight/openflowplugin.git" && cd /openflowplugin && mvn clean install'  
+  ovsdb:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:ovsdb ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:ovsdb bash -c 'git clone "https://github.com/opendaylight/ovsdb.git" && cd /ovsdb && mvn clean install'  
+  lispflowmapping:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping bash -c 'git clone "https://github.com/opendaylight/lispflowmapping.git" && cd /lispflowmapping && mvn clean install'  
