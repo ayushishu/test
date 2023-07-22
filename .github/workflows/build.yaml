@@ -116,6 +116,28 @@ jobs:
             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools ODL-Java-Code/Ubuntu/
           - name: Test 
             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools bash -c 'git clone "https://github.com/opendaylight/yangtools.git" && cd /yangtools && mvn clean install'  
+   
+  Docker-Images-Build-netconf:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:netconf ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:netconf bash -c 'git clone "https://github.com/opendaylight/netconf.git" && cd /netconf && mvn clean install'  
+  
+  Docker-Images-Build-odlparent:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+
+          - name: Build Docker image
+            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent ODL-Java-Code/Ubuntu/
+          - name: Test 
+            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent bash -c 'git clone "https://github.com/opendaylight/odlparent.git" && cd /odlparent && mvn clean install'  
 
 
 
