@@ -1,115 +1,115 @@
-# This is a basic workflow to help you get started with Actions
+# # This is a basic workflow to help you get started with Actions
 
-name: CI
+# name: CI
 
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# # Controls when the workflow will run
+# on:
+#   # Triggers the workflow on push or pull request events but only for the "main" branch
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+#   # Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  # This workflow contains a single job called "build"
-  Integration-distribution:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   # This workflow contains a single job called "build"
+#   Integration-distribution:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
      
-      - name: Build Docker image
-        run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:Integration-distribution ODL-Java-Code/Ubuntu/
-      - name: Test 
-        run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:Integration-distribution bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
+#       - name: Build Docker image
+#         run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:Integration-distribution ODL-Java-Code/Ubuntu/
+#       - name: Test 
+#         run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:Integration-distribution bash -c 'git clone "https://git.opendaylight.org/gerrit/integration/distribution" && cd /distribution && mvn clean install'  
  
-  aaa:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#   aaa:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa bash -c 'git clone "https://github.com/opendaylight/aaa.git" && cd /aaa && mvn clean install'  
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:aaa bash -c 'git clone "https://github.com/opendaylight/aaa.git" && cd /aaa && mvn clean install'  
   
-  yangtools:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#   yangtools:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools bash -c 'git clone "https://github.com/opendaylight/yangtools.git" && cd /yangtools && mvn clean install'  
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:yangtools bash -c 'git clone "https://github.com/opendaylight/yangtools.git" && cd /yangtools && mvn clean install'  
    
-  Serviceutils:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#   Serviceutils:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:serviceutils ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:serviceutils bash -c 'git clone "https://github.com/opendaylight/serviceutils.git" && cd /serviceutils && mvn clean install'  
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:serviceutils ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:serviceutils bash -c 'git clone "https://github.com/opendaylight/serviceutils.git" && cd /serviceutils && mvn clean install'  
    
-  odlparent: 
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#   odlparent: 
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent bash -c 'git clone "https://github.com/opendaylight/odlparent.git" && cd /odlparent && mvn clean install'  
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:odlparent bash -c 'git clone "https://github.com/opendaylight/odlparent.git" && cd /odlparent && mvn clean install'  
 
-  Openflowplugin:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#   Openflowplugin:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:openflowplugin ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:openflowplugin bash -c 'git clone "https://github.com/opendaylight/openflowplugin.git" && cd /openflowplugin && mvn clean install'  
-  Ovsdb:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:openflowplugin ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:openflowplugin bash -c 'git clone "https://github.com/opendaylight/openflowplugin.git" && cd /openflowplugin && mvn clean install'  
+#   Ovsdb:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:ovsdb ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:ovsdb bash -c 'git clone "https://github.com/opendaylight/ovsdb.git" && cd /ovsdb && mvn clean install'  
-  Lispflowmapping:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:ovsdb ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:ovsdb bash -c 'git clone "https://github.com/opendaylight/ovsdb.git" && cd /ovsdb && mvn clean install'  
+#   Lispflowmapping:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping bash -c 'git clone "https://github.com/opendaylight/lispflowmapping.git" && cd /lispflowmapping && mvn clean install'  
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:lispflowmapping bash -c 'git clone "https://github.com/opendaylight/lispflowmapping.git" && cd /lispflowmapping && mvn clean install'  
   
-  Docker-Images-Build-controller:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout repository
-            uses: actions/checkout@v2
+#   Docker-Images-Build-controller:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout repository
+#             uses: actions/checkout@v2
 
-          - name: Build Docker image
-            run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller ODL-Java-Code/Ubuntu/
-          - name: Test 
-            run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller bash -c 'export JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64 &&  git clone "https://github.com/opendaylight/controller.git" && cd /controller && mvn clean install'  
+#           - name: Build Docker image
+#             run: docker build -t ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller ODL-Java-Code/Ubuntu/
+#           - name: Test 
+#             run: docker run ${{ vars.REPOSITORY}}/${{ vars.IMAGENAME1 }}:controller bash -c 'export JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64 &&  git clone "https://github.com/opendaylight/controller.git" && cd /controller && mvn clean install'  
    
