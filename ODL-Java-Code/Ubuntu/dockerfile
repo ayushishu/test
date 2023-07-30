@@ -28,4 +28,18 @@ RUN mkdir -p /root/.m2 \
     && wget -q -O /tmp/settings.xml https://raw.githubusercontent.com/opendaylight/odlparent/master/settings.xml \
     && mv /tmp/settings.xml /root/.m2/settings.xml
 
-CMD tail -f /dev/null 
+# Install locales package and set up en_US.UTF-8 locale
+RUN apt-get update && apt-get install -y locales && \
+    locale-gen en_US.UTF-8
+
+# Set environment variables for locale
+ENV LANG=en_US.UTF-8
+ENV LC_CTYPE=en_US.UTF-8
+ENV LC_MESSAGES=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+
+
+
+RUN apt-get update \
+    && apt install python3-pip -y\
+    && apt install pip -y
