@@ -28,7 +28,7 @@ jobs:
         name: Build and export
         uses: docker/build-push-action@v4
         with:
-          context: Builder-Image/Ubuntu/
+          context: ODL-Java-Code/Ubuntu/
           tags: ${{ vars.IMAGENAME1 }}:latest  
           outputs: type=docker,dest=/tmp/${{ vars.IMAGENAME1 }}.tar
       -
