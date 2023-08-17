@@ -31,7 +31,8 @@ jobs:
             yum install -y git python3-pip &&        
             pip3 install robotframework robotframework-extendedrequestslibrary &&  
             git clone https://github.com/opendaylight/integration-test.git &&       
-            cd integration-test/csit/suites/integration/basic &&                    
+            cd integration-test/csit/suites/integration/basic && 
+            robot -L debug \
                   --variable USER_HOME:/home/centos \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
