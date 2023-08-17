@@ -29,10 +29,9 @@ jobs:
         run: |
           docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
             yum install -y git python3-pip &&        
-            pip3 install robotframework robotframework-extendedrequestslibrary &&  # Install Robot Framework and extended requests library
-            git clone https://github.com/opendaylight/integration-test.git &&       # Clone integration test repository
-            cd integration-test/csit/suites/integration/basic &&                    # Navigate to the test suite directory
-            robot -L debug \
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/integration/basic &&                    
                   --variable USER_HOME:/home/centos \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
