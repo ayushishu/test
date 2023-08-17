@@ -1,11 +1,12 @@
-name:csit
+name: csit
 
 on:
   push:
     branches:
       - main
 
-Build-And-Test-Robot-Docker-Image:
+jobs:
+  Build-And-Test-Robot-Docker-Image:
     runs-on: ubuntu-latest
 
     services:
@@ -16,14 +17,14 @@ Build-And-Test-Robot-Docker-Image:
         ports:
           - 8181:8181
         options: --name odl-container
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
-      - name: Build Docker image
-        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/        
 
-   
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+
       - name: Test
         run: |
           docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
@@ -36,4 +37,4 @@ Build-And-Test-Robot-Docker-Image:
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
-                  ./restconf_modules.robot'   
+                  ./restconf_modules.robot'
