@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Build-And-Test-Robot-Docker-Image:
+  aaa-csit-1node-authn-all-argon:
     runs-on: ubuntu-latest
 
     services:
