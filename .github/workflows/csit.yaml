@@ -172,4 +172,3 @@ jobs:
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
                   ./040-export-inclusions.robot'
-Update csit.yaml · ayushishu/test@85daeb0
