@@ -105,3 +105,77 @@ jobs:
                   --variable ODL_SYSTEM_USER:centos \
                   ./distribution'
 
+ daexim-csit-1node-basic-all-argon:
+    runs-on: ubuntu-latest
+
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+
+      - name: 010-special-export
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            yum install -y git python3-pip &&        
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/daexim && 
+            robot -L debug \
+                  --variable USER_HOME:/home/centos \
+                  --variable DEFAULT_LINUX_PROMPT:\$ \
+                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_USER:centos \
+                  ./010-special-export.robot'
+
+      - name: 020-import-basic
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            yum install -y git python3-pip &&        
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/daexim && 
+            robot -L debug \
+                  --variable USER_HOME:/home/centos \
+                  --variable DEFAULT_LINUX_PROMPT:\$ \
+                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_USER:centos \
+                  ./020-import-basic.robot'
+      - name: 030-export-basic
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            yum install -y git python3-pip &&        
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/daexim && 
+            robot -L debug \
+                  --variable USER_HOME:/home/centos \
+                  --variable DEFAULT_LINUX_PROMPT:\$ \
+                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_USER:centos \
+                  ./030-export-basic.robot'  
+      - name: 040-export-inclusions
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            yum install -y git python3-pip &&        
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/daexim && 
+            robot -L debug \
+                  --variable USER_HOME:/home/centos \
+                  --variable DEFAULT_LINUX_PROMPT:\$ \
+                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_USER:centos \
+                  ./040-export-inclusions.robot'
+                  
+                  
