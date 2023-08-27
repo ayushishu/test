@@ -127,7 +127,7 @@ jobs:
         
       - name: 010-special-export
         run: |
-            docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            docker run  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
             yum install -y git python3-pip &&
             pip3 install robotframework robotframework-extendedrequestslibrary &&
             git clone https://github.com/opendaylight/integration-test.git &&
