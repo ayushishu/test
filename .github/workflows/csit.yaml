@@ -125,7 +125,7 @@ jobs:
         
       - name: 010-special-export
         run: |
-          docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 } bash -c '
+            docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
             yum install -y git python3-pip &&
             pip3 install robotframework robotframework-extendedrequestslibrary &&
             git clone https://github.com/opendaylight/integration-test.git &&
@@ -135,11 +135,11 @@ jobs:
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
-                  ./010-special-export.robot'
+                  ./010-special-export.robot '
                   
       - name: 020-import-basic
         run: |
-          docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 } bash -c '
+          docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
           yum install -y git python3-pip &&
           pip3 install robotframework robotframework-extendedrequestslibrary &&
           git clone https://github.com/opendaylight/integration-test.git &&
@@ -152,7 +152,7 @@ jobs:
                 ./020-import-basic.robot'
       - name: 030-export-basic
         run: |
-          docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 } bash -c '
+          docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
             yum install -y git python3-pip &&
             pip3 install robotframework robotframework-extendedrequestslibrary &&
             git clone https://github.com/opendaylight/integration-test.git &&
@@ -166,7 +166,7 @@ jobs:
   
       - name: 040-export-inclusions
         run: |
-          docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 } bash -c '
+          docker run --network container:odl-container  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
             yum install -y git python3-pip &&
             pip3 install robotframework robotframework-extendedrequestslibrary &&
             git clone https://github.com/opendaylight/integration-test.git &&
@@ -177,9 +177,3 @@ jobs:
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
                   ./040-export-inclusions.robot'
-
-
-
-
-
-
