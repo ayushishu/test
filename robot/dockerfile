@@ -44,4 +44,10 @@ RUN pip install \
 
 # Install Java 17
 RUN yum install -y java-17-openjdk java-17-openjdk-devel
+
+# Install OpenSSH
+RUN yum install -y openssh
+
+# Generate SSH key pair
+RUN ssh-keygen -t rsa -b 4096 -N '' -f /root/.ssh/id_rsa
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
