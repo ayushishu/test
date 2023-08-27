@@ -109,23 +109,35 @@ jobs:
   
   daexim-csit-1node-basic-all-argon:
     runs-on: ubuntu-latest
-    # services:
-    #   opendaylight:
-    #     image: opendaylight/opendaylight:0.18.1
-    #     env:
-    #       FEATURES: odl-restconf,odl-netconf-topology
-    #     ports:
-    #       - 8181:8181
-    #     options: --name odl-container
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Build Docker image
-        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+        run: |
+          docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
         
-      - name: 010-special-export
+      - name: Extract id_rsa.pub from the container
+        id: extract_pubkey
+        run: |
+          docker run --entrypoint cat ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} /root/.ssh/id_rsa.pub > id_rsa.pub
+        continue-on-error: true
+
+      - name: Add public key to opendaylight container
+        run: |
+          PUB_KEY=$(cat id_rsa.pub)
+          docker exec odl-container sh -c "echo $PUB_KEY >> /root/.ssh/authorized_keys"
+
+      - name: Test
         run: |
             docker run  ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
             yum install -y git python3-pip &&
@@ -138,8 +150,8 @@ jobs:
             -v ODL_STREAM:argon \
             --variable DEFAULT_LINUX_PROMPT:\$ \
             --variable ODL_SYSTEM_USER:odl \
-            --variable ODL_SYSTEM_IP:20.55.36.240 \
-            --variable ODL_SYSTEM_1_IP:20.55.36.240 \
+            --variable ODL_SYSTEM_IP:opendaylight \
+            --variable ODL_SYSTEM_1_IP:opendaylight \
             -v IS_KARAF_APPL:True \
             ./010-special-export.robot '
                   
