@@ -109,14 +109,14 @@ jobs:
   
   daexim-csit-1node-basic-all-argon:
     runs-on: ubuntu-latest
-    services:
-      opendaylight:
-        image: opendaylight/opendaylight:0.18.1
-        env:
-          FEATURES: odl-restconf,odl-netconf-topology
-        ports:
-          - 8181:8181
-        options: --name odl-container
+    # services:
+    #   opendaylight:
+    #     image: opendaylight/opendaylight:0.18.1
+    #     env:
+    #       FEATURES: odl-restconf,odl-netconf-topology
+    #     ports:
+    #       - 8181:8181
+    #     options: --name odl-container
 
     steps:
       - name: Checkout repository
@@ -134,9 +134,11 @@ jobs:
             cd integration-test/csit/suites/daexim &&
             robot -L debug \
                   --variable USER_HOME:/root \
+                  -v BUNDLEFOLDER:karaf-0.18.1 \
+                  -v ODL_STREAM:argon \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
-                  --variable ODL_SYSTEM_IP:opendaylight \
-                  --variable ODL_SYSTEM_USER:centos \
+                  --variable ODL_SYSTEM_IP:20.55.36.240 \
+                  --variable ODL_SYSTEM_USER:odl \
                   ./010-special-export.robot '
                   
       - name: 020-import-basic
@@ -149,7 +151,7 @@ jobs:
           robot -L debug \
                 --variable USER_HOME:/root \
                 --variable DEFAULT_LINUX_PROMPT:\$ \
-                --variable ODL_SYSTEM_IP:opendaylight \
+                --variable ODL_SYSTEM_IP:20.55.36.240 \
                 --variable ODL_SYSTEM_USER:centos \
                 ./020-import-basic.robot'
       - name: 030-export-basic
@@ -162,7 +164,7 @@ jobs:
             robot -L debug \
                   --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
-                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_IP:20.55.36.240 \
                   --variable ODL_SYSTEM_USER:centos \
                   ./030-export-basic.robot'
   
@@ -176,7 +178,7 @@ jobs:
             robot -L debug \
                   --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
-                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_IP:20.55.36.240 \
                   --variable ODL_SYSTEM_USER:centos \
                   ./040-export-inclusions.robot'
                             
