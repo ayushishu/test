@@ -1,46 +1,45 @@
-# Base image
+# Use the CentOS 8 base image
 FROM centos:centos8
-# Add  mirrorlist
-RUN cd /etc/yum.repos.d/
-RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-# Install system update dependencies
-RUN yum update -y
-RUN yum install -y epel-release
-RUN yum install -y git
-# Install robot dependencies for CentOS 8
-RUN yum install -y postgresql-devel python3-docker python3-netaddr python38-pip
-RUN yum install python3-pip
-RUN pip3 install -U pip
-RUN pip install matplotlib 
-# Install lispflowmapping dependencies
-RUN yum install -y boost-devel libxml2-devel libxslt-devel
-# Install libpcap-devel (lispflowmapping dependencies)
-RUN dnf -y --enablerepo=powertools install libpcap-devel
-RUN dnf -y install libpcap-devel
-# Install lispflowmapping dependencies for CentOS 8
-RUN yum install -y python3-docker python3-netaddr
-#make
-RUN yum install -y make   
-# Clone and install udpreplay
-RUN git clone https://github.com/ska-sa/udpreplay.git /tmp/udpreplay
-# Install autoconf, gcc-c++ and cmake 
-RUN yum install -y automake cmake3 gcc-c++
-# Run bootstrap.sh script
-RUN cd /tmp/udpreplay && \
-    ./bootstrap.sh
-# Run configure script
-RUN cd /tmp/udpreplay && \
- ./configure 
-# Run make
-RUN cd /tmp/udpreplay && \cd /tmp/udpreplay && \
-    make
-# Install udpreplay to /usr/local/bin/udpreplay    
-RUN cd /tmp/udpreplay && \
-    cp udpreplay /usr/local/bin/udpreplay && \
-    chmod 0755 /usr/local/bin/udpreplay && \
-    cd / && \
-    rm -rf /tmp/udpreplay
-# Clean-up
-RUN rm -rf /tmp/udpreplay && \
-    yum clean all
+
+# Configure repository settings to use vault.centos.org
+RUN cd /etc/yum.repos.d/ \
+    && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
+    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
+# Update the system and install essential dependencies
+RUN yum update -y \
+    && yum install -y epel-release \
+    && yum install -y git wget \
+    && yum install -y openssl-devel bzip2-devel libffi-devel \
+    && yum groupinstall "Development Tools" -y
+
+# Download, compile, and install Python 3.10.2
+RUN wget https://www.python.org/ftp/python/3.10.2/Python-3.10.2.tgz \
+    && tar -xzf Python-3.10.2.tgz \
+    && cd Python-3.10.2 \
+    && ./configure --enable-optimizations \
+    && make altinstall
+
+# Set Python 3.10 alias
+RUN ln -s /usr/local/bin/python3.10 /usr/local/bin/python
+
+# Upgrade pip for Python 3.10
+RUN pip3.10 install -U pip
+
+# Install required Python packages
+RUN pip install \
+    elastic-transport==8.4.0 \
+    elasticsearch==7.17.9 \
+    elasticsearch-dsl==7.4.1 \
+    jmespath==1.0.1 \
+    robotframework==6.1.1 \
+    robotframework-extendedrequestslibrary==0.5.5 \
+    robotframework-httplibrary==0.4.2 \
+    robotframework-requests==0.9.3 \
+    robotframework-sshlibrary==3.8.0 \
+    robotframework-sshlibrary
+
+
+# Install Java 17
+RUN yum install -y java-17-openjdk java-17-openjdk-devel
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
