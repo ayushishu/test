@@ -122,13 +122,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Start robot container
-        run: |
-          docker run -d --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
 
       - name: Build Docker image
         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
-        
+      
+      - name: Start robot container
+        run: |
+          docker run -d --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
+      
       - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
         run: |
