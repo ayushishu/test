@@ -6,106 +6,106 @@ on:
       - main
 
 jobs:
-  # aaa-csit-1node-authn-all-argon:
-  #   runs-on: ubuntu-latest
+  aaa-csit-1node-authn-all-argon:
+    runs-on: ubuntu-latest
 
-  #   services:
-  #     opendaylight:
-  #       image: opendaylight/opendaylight:0.18.1
-  #       env:
-  #         FEATURES: odl-restconf,odl-netconf-topology
-  #       ports:
-  #         - 8181:8181
-  #       options: --name odl-container
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  #     - name: Build Docker image
-  #       run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
 
-  #     - name: Test
-  #       run: |
-  #         docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
-  #           yum install -y git python3-pip &&        
-  #           pip3 install robotframework robotframework-extendedrequestslibrary &&  
-  #           git clone https://github.com/opendaylight/integration-test.git &&       
-  #           cd integration-test/csit/suites/aaa/authn && 
-  #           robot -L debug \
-  #                 --variable USER_HOME:/root \
-  #                 --variable DEFAULT_LINUX_PROMPT:\$ \
-  #                 --variable ODL_SYSTEM_IP:opendaylight \
-  #                 --variable ODL_SYSTEM_USER:centos \
-  #                 ./Restconf_Basic_Auth.robot'
+      - name: Test
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            yum install -y git python3-pip &&        
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/aaa/authn && 
+            robot -L debug \
+                  --variable USER_HOME:/root \
+                  --variable DEFAULT_LINUX_PROMPT:\$ \
+                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_USER:centos \
+                  ./Restconf_Basic_Auth.robot'
 
-  # yangtools-csit-1node:
-  #   runs-on: ubuntu-latest
+  yangtools-csit-1node:
+    runs-on: ubuntu-latest
 
-  #   services:
-  #     opendaylight:
-  #       image: opendaylight/opendaylight:0.18.1
-  #       env:
-  #         FEATURES: odl-restconf,odl-netconf-topology
-  #       ports:
-  #         - 8181:8181
-  #       options: --name odl-container
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  #     - name: Build Docker image
-  #       run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
 
-  #     - name: Test
-  #       run: |
-  #         docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
-  #           yum install -y git python3-pip &&        
-  #           pip3 install robotframework robotframework-extendedrequestslibrary &&  
-  #           git clone https://github.com/opendaylight/integration-test.git &&       
-  #           cd integration-test/csit/suites && 
-  #           robot -L debug \
-  #                 --variable USER_HOME:/root\
-  #                 --variable DEFAULT_LINUX_PROMPT:\$ \
-  #                 --variable ODL_SYSTEM_IP:opendaylight \
-  #                 --variable ODL_SYSTEM_USER:centos \
-  #                 -v IS_KARAF_APPL:True \
-  #                 ./yangtools'
+      - name: Test
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            yum install -y git python3-pip &&        
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites && 
+            robot -L debug \
+                  --variable USER_HOME:/root\
+                  --variable DEFAULT_LINUX_PROMPT:\$ \
+                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_USER:centos \
+                  -v IS_KARAF_APPL:True \
+                  ./yangtools'
 
-  # distribution-csit-1node:
-  #   runs-on: ubuntu-latest
+  distribution-csit-1node:
+    runs-on: ubuntu-latest
 
-  #   services:
-  #     opendaylight:
-  #       image: opendaylight/opendaylight:0.18.1
-  #       env:
-  #         FEATURES: odl-restconf,odl-netconf-topology
-  #       ports:
-  #         - 8181:8181
-  #       options: --name odl-container
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  #     - name: Build Docker image
-  #       run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
 
-  #     - name: Test
-  #       run: |
-  #         docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
-  #           yum install -y git python3-pip &&        
-  #           pip3 install robotframework robotframework-extendedrequestslibrary &&  
-  #           git clone https://github.com/opendaylight/integration-test.git &&       
-  #           cd integration-test/csit/suites && 
-  #           robot -L debug \
-  #                 --variable USER_HOME:/root \
-  #                 --variable DEFAULT_LINUX_PROMPT:\$ \
-  #                 --variable ODL_SYSTEM_IP:opendaylight \
-  #                 --variable ODL_SYSTEM_USER:centos \
-  #                 -v IS_KARAF_APPL:True \
-  #                 ./distribution'
+      - name: Test
+        run: |
+          docker run --network container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} bash -c '
+            yum install -y git python3-pip &&        
+            pip3 install robotframework robotframework-extendedrequestslibrary &&  
+            git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites && 
+            robot -L debug \
+                  --variable USER_HOME:/root \
+                  --variable DEFAULT_LINUX_PROMPT:\$ \
+                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_USER:centos \
+                  -v IS_KARAF_APPL:True \
+                  ./distribution'
   
   daexim-csit-1node-basic-all-argon:
     runs-on: ubuntu-latest
