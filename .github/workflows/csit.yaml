@@ -122,8 +122,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # - name: Build Docker image
-      #   run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
         
       - name: 010-special-export
         run: |
