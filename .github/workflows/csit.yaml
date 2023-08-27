@@ -214,3 +214,38 @@ jobs:
                       --variable ODL_SYSTEM_USER:centos \
                       -v IS_KARAF_APPL:True \
                       ./Southbound_Domain'   
+
+  jsonpc-csit-1node:
+    runs-on: ubuntu-latest
+                    
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-containe
+      
+    
+    steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+                    
+          - name: Build Docker image
+            run: docker build -t ${{ env.REPOSITORY }}/${{ env.IMAGENAME2 }} robot
+                    
+          - name: Test
+            run: |
+              docker run --network container:odl-container ${{ env.REPOSITORY }}/${{ env.IMAGENAME2 }} bash -c '
+                yum install -y git python3-pip &&        
+                pip3 install robotframework robotframework-extendedrequestslibrary &&  
+                git clone https://github.com/opendaylight/integration-test.git &&       
+                cd integration-test/csit/suites/ovsdb && 
+                robot -L debug \
+                      --variable USER_HOME:/home/centos \
+                      --variable DEFAULT_LINUX_PROMPT:\$ \
+                      --variable ODL_SYSTEM_IP:opendaylight \
+                      --variable ODL_SYSTEM_USER:centos \
+                      -v IS_KARAF_APPL:True \
+                      ./010-mdsal-jsonrpc-basic.robot'                      
