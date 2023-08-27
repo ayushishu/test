@@ -33,7 +33,7 @@ jobs:
             git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/aaa/authn && 
             robot -L debug \
-                  --variable USER_HOME:/home/centos \
+                  --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
@@ -66,7 +66,7 @@ jobs:
             git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites && 
             robot -L debug \
-                  --variable USER_HOME:/home/centos \
+                  --variable USER_HOME:/root\
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
@@ -100,7 +100,7 @@ jobs:
             git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites && 
             robot -L debug \
-                  --variable USER_HOME:/home/centos \
+                  --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
@@ -133,7 +133,7 @@ jobs:
             git clone https://github.com/opendaylight/integration-test.git &&
             cd integration-test/csit/suites/daexim &&
             robot -L debug \
-                  --variable USER_HOME:/home/centos \
+                  --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
@@ -147,7 +147,7 @@ jobs:
           git clone https://github.com/opendaylight/integration-test.git &&
           cd integration-test/csit/suites/daexim &&
           robot -L debug \
-                --variable USER_HOME:/home/centos \
+                --variable USER_HOME:/root \
                 --variable DEFAULT_LINUX_PROMPT:\$ \
                 --variable ODL_SYSTEM_IP:opendaylight \
                 --variable ODL_SYSTEM_USER:centos \
@@ -160,7 +160,7 @@ jobs:
             git clone https://github.com/opendaylight/integration-test.git &&
             cd integration-test/csit/suites/daexim &&
             robot -L debug \
-                  --variable USER_HOME:/home/centos \
+                  --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
@@ -174,7 +174,7 @@ jobs:
             git clone https://github.com/opendaylight/integration-test.git &&
             cd integration-test/csit/suites/daexim &&
             robot -L debug \
-                  --variable USER_HOME:/home/centos \
+                  --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
@@ -208,7 +208,7 @@ jobs:
                 git clone https://github.com/opendaylight/integration-test.git &&       
                 cd integration-test/csit/suites/ovsdb && 
                 robot -L debug \
-                      --variable USER_HOME:/home/centos \
+                      --variable USER_HOME:/root \
                       --variable DEFAULT_LINUX_PROMPT:\$ \
                       --variable ODL_SYSTEM_IP:opendaylight \
                       --variable ODL_SYSTEM_USER:centos \
@@ -243,7 +243,7 @@ jobs:
                 git clone https://github.com/opendaylight/integration-test.git &&       
                 cd integration-test/csit/suites/ovsdb && 
                 robot -L debug \
-                      --variable USER_HOME:/home/centos \
+                      --variable USER_HOME:/root \
                       --variable DEFAULT_LINUX_PROMPT:\$ \
                       --variable ODL_SYSTEM_IP:opendaylight \
                       --variable ODL_SYSTEM_USER:centos \
