@@ -5,6 +5,10 @@ FROM centos:centos8
 RUN cd /etc/yum.repos.d/ \
     && sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* \
     && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
+# Install OpenSSH
+RUN yum install -y openssh
+
 # Generate SSH key pair
 RUN ssh-keygen -t rsa -b 4096 -N '' -f /root/.ssh/id_rsa
 
@@ -15,7 +19,7 @@ RUN yum update -y \
     && yum install -y openssl-devel bzip2-devel libffi-devel \
     && yum groupinstall "Development Tools" -y
 
-# Download, compile, and install Python 3.10.2
+# Download, compile,a and install Python 3.10.2
 RUN wget https://www.python.org/ftp/python/3.10.2/Python-3.10.2.tgz \
     && tar -xzf Python-3.10.2.tgz \
     && cd Python-3.10.2 \
@@ -44,10 +48,4 @@ RUN pip install \
 
 # Install Java 17
 RUN yum install -y java-17-openjdk java-17-openjdk-devel
-
-# Install OpenSSH
-RUN yum install -y openssh
-
-# Generate SSH key pair
-RUN ssh-keygen -t rsa -b 4096 -N '' -f /root/.ssh/id_rsa
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
