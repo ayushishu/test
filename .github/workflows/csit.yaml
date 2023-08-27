@@ -70,6 +70,7 @@ jobs:
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
+                  -v IS_KARAF_APPL:True \
                   ./yangtools'
 
   distribution-csit-1node:
@@ -103,6 +104,7 @@ jobs:
                   --variable DEFAULT_LINUX_PROMPT:\$ \
                   --variable ODL_SYSTEM_IP:opendaylight \
                   --variable ODL_SYSTEM_USER:centos \
+                  -v IS_KARAF_APPL:True \
                   ./distribution'
   
   daexim-csit-1node-basic-all-argon:
