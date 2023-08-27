@@ -122,14 +122,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Build Docker image
+      - name: Start robot container
         run: |
-          docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+          docker run -d --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
+
+      - name: Build Docker image
+        run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
         
-      - name: Extract id_rsa.pub from the container
+      - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
         run: |
-          docker run --name robot --entrypoint cat ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} /root/.ssh/id_rsa.pub > id_rsa.pub
+          docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
         continue-on-error: true
 
       - name: Add public key to opendaylight container
@@ -137,21 +140,24 @@ jobs:
           PUB_KEY=$(cat id_rsa.pub)
           docker exec -u root odl-container sh -c "mkdir -p /root/.ssh && echo \"$PUB_KEY\" >> /root/.ssh/authorized_keys"
 
-      - name: Test
+      - name: Run Test
         run: |
-            docker exec robot bash -c 'cat root/.ssh/id_rsa.pub &&
-            git clone https://github.com/opendaylight/integration-test.git &&
-            cd integration-test/csit/suites/daexim &&
-            robot -L debug --variable USER_HOME:/root \
-            --variable WORKSPACE:/home/odl \
-            -v BUNDLEFOLDER:karaf-0.18.1 \
-            -v ODL_STREAM:argon \
-            --variable DEFAULT_LINUX_PROMPT:\$ \
-            --variable ODL_SYSTEM_USER:odl \
-            --variable ODL_SYSTEM_IP:opendaylight \
-            --variable ODL_SYSTEM_1_IP:opendaylight \
-            -v IS_KARAF_APPL:True \
-            ./010-special-export.robot '
+          docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&
+          git clone https://github.com/opendaylight/integration-test.git &&
+          cd integration-test/csit/suites/daexim &&
+          robot -L debug --variable USER_HOME:/root \
+          --variable WORKSPACE:/home/odl \
+          -v BUNDLEFOLDER:karaf-0.18.1 \
+          -v ODL_STREAM:argon \
+          --variable DEFAULT_LINUX_PROMPT:\$ \
+          --variable ODL_SYSTEM_USER:odl \
+          --variable ODL_SYSTEM_IP:opendaylight \
+          --variable ODL_SYSTEM_1_IP:opendaylight \
+          -v IS_KARAF_APPL:True \
+          ./010-special-export.robot '
+
+      - name: Stop and remove robot container
+        run: docker rm -f robot
                   
       # - name: 020-import-basic
       #   run: |
