@@ -21,10 +21,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
+      
+      - name: Build Docker image
+        run: |
+         docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+      
       - name: Start robot container
         run: |
-          docker run -d --name robot --net container:odl-container ayushishu/robot-base-image:latest tail -f /dev/null
+          docker run -d --name robot --net container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
 
       - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
