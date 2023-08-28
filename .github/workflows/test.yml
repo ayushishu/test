@@ -24,11 +24,11 @@ jobs:
 
       - name: Start robot container
         run: |
-          docker run -d --name robot ayushishu/robot-base-image:latest tail -f /dev/null
+          docker run -d --name robot --network opendaylight ayushishu/robot-base-image:latest tail -f /dev/null
 
       - name: Run Test
         run: |
-          curl opendaylight:8181 && curl odl-container:8181
+          curl opendaylight:8181 
 
       - name: Run additional commands if needed
         run: |
