@@ -47,17 +47,17 @@ jobs:
           docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&
           curl localhost:8181 && curl 127.0.0.1:8181 && curl opendaylight:8181 &&
           git clone https://github.com/opendaylight/integration-test.git &&
-          cd integration-test/csit/suites/daexim &&
+          cd integration-test/csit/suites/aaa &&
           robot -L debug --variable USER_HOME:/root \
           --variable WORKSPACE:/home/odl \
           -v BUNDLEFOLDER:karaf-0.18.1 \
           -v ODL_STREAM:argon \
           --variable DEFAULT_LINUX_PROMPT:\$ \
           --variable ODL_SYSTEM_USER:odl \
-          --variable ODL_SYSTEM_IP:127.0.0.1 \
-          --variable ODL_SYSTEM_1_IP:127.0.0.1 \
+          --variable ODL_SYSTEM_IP:localhost \
+          --variable ODL_SYSTEM_1_IP:localhost \
           -v IS_KARAF_APPL:True \
-          ./010-special-export.robot '
+          ./authn '
           
       - name: Run additional commands if needed
         run: |
