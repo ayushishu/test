@@ -28,4 +28,13 @@ jobs:
 
       - name: Run Test
         run: |
-           curl opendaylight:8181 && curl odl-container:8181'
+          curl opendaylight:8181 && curl odl-container:8181
+
+      - name: Run additional commands if needed
+        run: |
+          # Add any other necessary commands here
+
+      - name: Clean up
+        run: |
+          docker stop robot
+          docker rm robot
