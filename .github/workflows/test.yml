@@ -13,7 +13,7 @@ jobs:
       opendaylight:
         image: opendaylight/opendaylight:0.18.1
         env:
-          FEATURES: odl-restconf,odl-netconf-topology
+          FEATURES: odl-restconf,odl-netconf-topology,odl-daexim-all,odl-netconf-topology,odl-jolokia
         ports:
           - 8181:8181
         options: --name odl-container
