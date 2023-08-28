@@ -1,40 +1,40 @@
-# name: csit
+name: csit
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   aaa-csit-1node-authn-all-argon:
-#     runs-on: ubuntu-latest
+jobs:
+  aaa-csit-1node-authn-all-argon:
+    runs-on: ubuntu-latest
 
-#     services:
-#       opendaylight:
-#         image: opendaylight/opendaylight:0.18.1
-#         env:
-#           FEATURES: odl-restconf,odl-netconf-topology
-#         ports:
-#           - 8181:8181
-#         options: --name odl-container
+    services:
+      opendaylight:
+        image: opendaylight/opendaylight:0.18.1
+        env:
+          FEATURES: odl-restconf,odl-netconf-topology
+        ports:
+          - 8181:8181
+        options: --name odl-container
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-#       - name: Start robot container
-#         run: |
-#           docker run -d --name robot --network opendaylight ayushishu/robot-base-image:latest tail -f /dev/null
+      - name: Start robot container
+        run: |
+          docker run -d --name robot --network opendaylight ayushishu/robot-base-image:latest tail -f /dev/null
 
-#       - name: Run Test
-#         run: |
-#           curl opendaylight:8181 
+      - name: Run Test
+        run: |
+          curl opendaylight:8181 
 
-#       - name: Run additional commands if needed
-#         run: |
-#           # Add any other necessary commands here
+      - name: Run additional commands if needed
+        run: |
+          # Add any other necessary commands here
 
-#       - name: Clean up
-#         run: |
-#           docker stop robot
-#           docker rm robot
+      - name: Clean up
+        run: |
+          docker stop robot
+          docker rm robot
