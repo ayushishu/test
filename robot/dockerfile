@@ -49,5 +49,5 @@ RUN pip install \
 # Install Java 17
 RUN yum install -y java-17-openjdk java-17-openjdk-devel
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-
+EXPOSE 22
 CMD tail -f /dev/null 
