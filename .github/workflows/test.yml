@@ -25,10 +25,35 @@ jobs:
       - name: Start robot container
         run: |
           docker run -d --name robot --net container:odl-container ayushishu/robot-base-image:latest tail -f /dev/null
+
+      - name: Extract id_rsa.pub from the robot container
+        id: extract_pubkey
+        run: |
+          docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
+        continue-on-error: true
+
+      - name: Add public key to opendaylight container
+        run: |
+          PUB_KEY=$(cat id_rsa.pub)
+          docker exec -u root odl-container sh -c "mkdir -p /root/.ssh && echo \"$PUB_KEY\" >> /root/.ssh/authorized_keys"
+
           
       - name: Run Test
         run: |
-          curl localhost:8181 
+          docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&
+          && curl localhost:8181 && 
+          git clone https://github.com/opendaylight/integration-test.git &&
+          cd integration-test/csit/suites/daexim &&
+          robot -L debug --variable USER_HOME:/root \
+          --variable WORKSPACE:/home/odl \
+          -v BUNDLEFOLDER:karaf-0.18.1 \
+          -v ODL_STREAM:argon \
+          --variable DEFAULT_LINUX_PROMPT:\$ \
+          --variable ODL_SYSTEM_USER:odl \
+          --variable ODL_SYSTEM_IP:opendaylight \
+          --variable ODL_SYSTEM_1_IP:opendaylight \
+          -v IS_KARAF_APPL:True \
+          ./010-special-export.robot '
           
       - name: Run additional commands if needed
         run: |
@@ -38,4 +63,3 @@ jobs:
         run: |
           docker stop robot
           docker rm robot
-          docker network rm opendaylight
