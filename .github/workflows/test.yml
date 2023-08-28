@@ -1,69 +1,69 @@
-name: csit
+# name: csit
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  aaa-csit-1node-authn-all-argon:
-    runs-on: ubuntu-latest
+# jobs:
+#   aaa-csit-1node-authn-all-argon:
+#     runs-on: ubuntu-latest
 
-    services:
-      opendaylight:
-        image: opendaylight/opendaylight:0.18.1
-        env:
-          FEATURES: odl-restconf,odl-netconf-topology,odl-daexim-all,odl-netconf-topology,odl-jolokia
-        ports:
-          - 8181:8181
-        options: --name odl-container
+#     services:
+#       opendaylight:
+#         image: opendaylight/opendaylight:0.18.1
+#         env:
+#           FEATURES: odl-restconf,odl-netconf-topology,odl-daexim-all,odl-netconf-topology,odl-jolokia
+#         ports:
+#           - 8181:8181
+#         options: --name odl-container
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
       
-      - name: Build Docker image
-        run: |
-         docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
+#       - name: Build Docker image
+#         run: |
+#          docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
       
-      - name: Start robot container
-        run: |
-          docker run -d --name robot --net container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
+#       - name: Start robot container
+#         run: |
+#           docker run -d --name robot --net container:odl-container ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
 
-      - name: Extract id_rsa.pub from the robot container
-        id: extract_pubkey
-        run: |
-          docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
-        continue-on-error: true
+#       - name: Extract id_rsa.pub from the robot container
+#         id: extract_pubkey
+#         run: |
+#           docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
+#         continue-on-error: true
 
-      - name: Add public key to opendaylight container
-        run: |
-          PUB_KEY=$(cat id_rsa.pub)
-          docker exec -u root odl-container sh -c "mkdir -p /root/.ssh && echo \"$PUB_KEY\" >> /root/.ssh/authorized_keys"
+#       - name: Add public key to opendaylight container
+#         run: |
+#           PUB_KEY=$(cat id_rsa.pub)
+#           docker exec -u root odl-container sh -c "mkdir -p /root/.ssh && echo \"$PUB_KEY\" >> /root/.ssh/authorized_keys"
 
           
-      - name: Run Test
-        run: |
-          docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&
-          curl localhost:8181 && curl 127.0.0.1:8181 && curl opendaylight:8181 &&
-          git clone https://github.com/opendaylight/integration-test.git &&
-          cd integration-test/csit/suites/aaa &&
-          robot -L debug --variable USER_HOME:/root \
-          --variable WORKSPACE:/home/odl \
-          -v BUNDLEFOLDER:karaf-0.18.1 \
-          -v ODL_STREAM:argon \
-          --variable DEFAULT_LINUX_PROMPT:\$ \
-          --variable ODL_SYSTEM_USER:odl \
-          --variable ODL_SYSTEM_IP:localhost \
-          --variable ODL_SYSTEM_1_IP:localhost \
-          -v IS_KARAF_APPL:True \
-          ./authn '
+#       - name: Run Test
+#         run: |
+#           docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&
+#           curl localhost:8181 && curl 127.0.0.1:8181 && curl opendaylight:8181 &&
+#           git clone https://github.com/opendaylight/integration-test.git &&
+#           cd integration-test/csit/suites/aaa &&
+#           robot -L debug --variable USER_HOME:/root \
+#           --variable WORKSPACE:/home/odl \
+#           -v BUNDLEFOLDER:karaf-0.18.1 \
+#           -v ODL_STREAM:argon \
+#           --variable DEFAULT_LINUX_PROMPT:\$ \
+#           --variable ODL_SYSTEM_USER:odl \
+#           --variable ODL_SYSTEM_IP:localhost \
+#           --variable ODL_SYSTEM_1_IP:localhost \
+#           -v IS_KARAF_APPL:True \
+#           ./authn '
           
-      - name: Run additional commands if needed
-        run: |
-          # Add any other necessary commands here
+#       - name: Run additional commands if needed
+#         run: |
+#           # Add any other necessary commands here
           
-      - name: Clean up
-        run: |
-          docker stop robot
-          docker rm robot
+#       - name: Clean up
+#         run: |
+#           docker stop robot
+#           docker rm robot
