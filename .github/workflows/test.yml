@@ -50,8 +50,8 @@ jobs:
           -v ODL_STREAM:argon \
           --variable DEFAULT_LINUX_PROMPT:\$ \
           --variable ODL_SYSTEM_USER:odl \
-          --variable ODL_SYSTEM_IP:localhost \
-          --variable ODL_SYSTEM_1_IP:localhost \
+          --variable ODL_SYSTEM_IP:127.0.0.1 \
+          --variable ODL_SYSTEM_1_IP:127.0.0.1 \
           -v IS_KARAF_APPL:True \
           ./010-special-export.robot '
           
