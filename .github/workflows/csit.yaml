@@ -26,7 +26,7 @@ jobs:
         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
       - name: j
         run: |
-             docker exec -u root odl-container sh -c "echo 'org.jolokia.authMode=basic\norg.jolokia.user=admin\norg.jolokia.password=admin' >> /home/odluser/karaf-0.18.1/etc/org.jolokia.osgi.cfg"
+             docker exec -u root odl-container sh -c "echo 'org.jolokia.authMode=basic\norg.jolokia.user=admin\norg.jolokia.password=admin' >> /opt/opendaylight/etc/org.jolokia.osgi.cfg"
       - name: Start robot container
         run: |
           docker run -d --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
