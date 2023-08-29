@@ -51,7 +51,7 @@ jobs:
             robot -L debug \
                   --variable USER_HOME:/root \
                   --variable DEFAULT_LINUX_PROMPT:\$ \
-                  --variable ODL_SYSTEM_IP:opendaylight \
+                  --variable ODL_SYSTEM_IP:localhost \
                   --variable ODL_SYSTEM_USER:centos \
                   ./Restconf_Basic_Auth.robot'
 
