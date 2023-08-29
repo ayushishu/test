@@ -44,6 +44,7 @@ jobs:
 
       - name: Run Test
         run: |
+          curl localhost:8181 && curl opendaylight:8181 &&
           docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&     
             pip3 install robotframework robotframework-extendedrequestslibrary &&  
             git clone https://github.com/opendaylight/integration-test.git &&       
