@@ -66,10 +66,7 @@ jobs:
             -v IS_KARAF_APPL:True \
                   ./daexim/010-special-export.robot'
       - name: Run Test34
-        run: |
-          curl localhost:8181 && 
-          docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&      
-            git clone https://github.com/opendaylight/integration-test.git &&       
+        run: |     
             cd integration-test/csit/suites/ && 
           robot -L debug --variable USER_HOME:/root \
             --variable WORKSPACE:/home/youruser \
