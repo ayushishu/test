@@ -26,7 +26,6 @@ jobs:
         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
       - name: j
         run: |
-             docker exec odl-container bash -c "mkdir home/youruser/.shh" &&
              docker exec odl-container bash -c "touch home/youruser/.shh/authorized_keys "
       - name: Start robot container
         run: |
