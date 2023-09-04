@@ -75,23 +75,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: ssh
+      - name: setup-jolokia
         run: |
              docker exec odl-container bash -c "echo 'org.jolokia.authMode=basic\norg.jolokia.user=admin\norg.jolokia.password=admin' >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg"
       - name: Start robot container
         run: |
           docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
       
-      - name: Extract id_rsa.pub from the robot container
-        id: extract_pubkey
-        run: |
-          docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
-        continue-on-error: true
-
-      - name: Add public key to opendaylight container
-        run: |
-          PUB_KEY=$(cat id_rsa.pub)
-          docker exec odl-container bash -c "mkdir home/youruser/.shh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
 
       - name: Delay for 30 seconds
         run: sleep 30
