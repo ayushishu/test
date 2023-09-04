@@ -5,7 +5,8 @@ on:
     branches:
       - main
 
-jobs:  daexim-csit-1node-argon:
+jobs:  
+ daexim-csit-1node-argon:
     runs-on: ubuntu-latest
     
     services:
