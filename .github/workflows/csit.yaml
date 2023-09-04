@@ -106,3 +106,54 @@ jobs:
             -v IS_KARAF_APPL:True \
                   ./authn '
 
+  distribution-csit-1node-userfeatures-all:
+    runs-on: ubuntu-latest
+    
+    services:
+      opendaylight:
+        image: ayushishu/odl:v1
+        env:
+          FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
+        ports:
+          - 8181:8181
+        options: --name odl-container
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: ssh
+        run: |
+             docker exec odl-container bash -c "mkdir home/youruser/.ssh && touch home/youruser/.ssh/authorized_keys"
+      - name: Start robot container
+        run: |
+          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
+      
+      - name: Extract id_rsa.pub from the robot container
+        id: extract_pubkey
+        run: |
+          docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
+        continue-on-error: true
+
+      - name: Add public key to opendaylight container
+        run: |
+          PUB_KEY=$(cat id_rsa.pub)
+          docker exec odl-container bash -c "mkdir home/youruser/.shh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
+      - name: Delay for 30 seconds
+        run: sleep 30
+            
+      - name: Run Test
+        run: |
+          curl localhost:8181 && 
+          docker exec robot bash -c 'git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/distribution && 
+          robot -L debug --variable USER_HOME:/root \
+            --variable WORKSPACE:/home/youruser \
+            -v BUNDLEFOLDER:karaf-0.18.1 \
+            -v ODL_STREAM:argon \
+            --variable DEFAULT_LINUX_PROMPT:\$ \
+            --variable ODL_SYSTEM_USER:youruser \
+            --variable ODL_SYSTEM_IP:opendaylight \
+            --variable ODL_SYSTEM_1_IP:opendaylight\
+            -v IS_KARAF_APPL:True \
+                  ./karaf_sequence_install.robot karaf_stop.robot size.robot'
