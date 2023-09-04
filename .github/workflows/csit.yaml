@@ -11,9 +11,9 @@ jobs:
 
     services:
       opendaylight:
-        image: opendaylight/opendaylight:0.18.1
+        image: ayushishu/odl:v1
         env:
-          FEATURES: odl-restconf,odl-netconf-topology
+          FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
         ports:
           - 8181:8181
         options: --name odl-container
@@ -26,7 +26,8 @@ jobs:
         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
       - name: j
         run: |
-             docker exec -u root odl-container sh -c "echo 'org.jolokia.authMode=basic\norg.jolokia.user=admin\norg.jolokia.password=admin' >> /opt/opendaylight/etc/org.jolokia.osgi.cfg"
+             docker exec odl-container bash -c "mkdir home/youruser/.shh" &&
+             docker exec odl-container bash -c "touch home/youruser/.shh/authorized_keys "
       - name: Start robot container
         run: |
           docker run -d --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
@@ -40,7 +41,7 @@ jobs:
       - name: Add public key to opendaylight container
         run: |
           PUB_KEY=$(cat id_rsa.pub)
-          docker exec -u root odl-container sh -c "mkdir -p /root/.ssh && echo \"$PUB_KEY\" >> /root/.ssh/authorized_keys"
+          docker exec bash -c odl-container sh -c "mkdir home/youruser/.shh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
 
       - name: Run Test
         run: |
