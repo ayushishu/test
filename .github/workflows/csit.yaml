@@ -100,5 +100,5 @@ jobs:
             --variable ODL_SYSTEM_IP:opendaylight \
             --variable ODL_SYSTEM_1_IP:opendaylight\
             -v IS_KARAF_APPL:True \
-                  ./auth '
+                  ./authn '
 
