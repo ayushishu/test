@@ -77,7 +77,11 @@ jobs:
 
       - name: setup-jolokia
         run: |
-             docker exec odl-container bash -c "echo 'org.jolokia.authMode=basic\norg.jolokia.user=admin\norg.jolokia.password=admin' >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg"
+             docker exec -it odl-container bash -c \
+              "echo 'org.jolokia.authMode=basic' >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
+               echo 'org.jolokia.user=admin' >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
+               echo 'org.jolokia.password=admin' >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg"
+
       - name: Start robot container
         run: |
           docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
