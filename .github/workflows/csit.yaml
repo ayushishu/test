@@ -51,7 +51,7 @@ jobs:
             
       - name: Run Test
         run: |
-          curl localhost:8181 && curl opendaylight:8181
+          curl localhost:8181 && curl odl-container:8181
           docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&      
             git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/ && 
@@ -61,8 +61,8 @@ jobs:
             -v ODL_STREAM:argon \
             --variable DEFAULT_LINUX_PROMPT:\$ \
             --variable ODL_SYSTEM_USER:youruser \
-            --variable ODL_SYSTEM_IP:opendaylight \
-            --variable ODL_SYSTEM_1_IP:opendaylight\
+            --variable ODL_SYSTEM_IP:odl-container \
+            --variable ODL_SYSTEM_1_IP:odl-container\
             -v IS_KARAF_APPL:True \
                   ./daexim'
 
