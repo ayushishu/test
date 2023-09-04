@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:  
- daexim-csit-1node-argon:
+  daexim-csit-1node-argon:
     runs-on: ubuntu-latest
     
     services:
