@@ -46,7 +46,7 @@ jobs:
 
       - name: test
         run: |
-           docker exec odl-container bash -c "cat home/youruser/.shh/authorized_keys"
+           docker exec odl-container bash -c "cat home/youruser/.ssh/authorized_keys"
 
             
       - name: Run Test
