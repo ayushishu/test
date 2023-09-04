@@ -41,7 +41,7 @@ jobs:
       - name: Add public key to opendaylight container
         run: |
           PUB_KEY=$(cat id_rsa.pub)
-          docker exec bash -c odl-container sh -c "mkdir home/youruser/.shh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
+          docker exec odl-container bash -c "mkdir home/youruser/.shh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
 
       - name: Run Test
         run: |
