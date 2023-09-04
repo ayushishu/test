@@ -29,7 +29,7 @@ jobs:
              docker exec odl-container bash -c "mkdir home/youruser/.ssh && touch home/youruser/.ssh/authorized_keys"
       - name: Start robot container
         run: |
-          docker run -d --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
+          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
       
       - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
@@ -43,9 +43,14 @@ jobs:
           docker exec odl-container bash -c "mkdir home/youruser/.shh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
       - name: Delay for 30 seconds
         run: sleep 30
+
+      - name: test
+        run: |
+            ssh youruser@localhost
+            
       - name: Run Test
         run: |
-          curl localhost:8181 &&
+          curl localhost:8181 && curl opendaylight:8181
           docker exec robot bash -c 'cat /root/.ssh/id_rsa.pub &&      
             git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/ && 
