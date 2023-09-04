@@ -24,9 +24,9 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} robot/
-      - name: j
+      - name: ssh
         run: |
-             docker exec odl-container bash -c "mkdir home/your && touch home/youruser/.shh/authorized_keys "
+             docker exec odl-container bash -c "mkdir home/youruser/.ssh && touch home/youruser/.ssh/authorized_keys"
       - name: Start robot container
         run: |
           docker run -d --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
