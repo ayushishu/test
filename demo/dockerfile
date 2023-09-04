@@ -1,0 +1,29 @@
+# Use the official Ubuntu image as the base image
+FROM ubuntu:latest
+
+# Update the package list and install necessary packages
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    openjdk-17-jdk \
+    openssh-server
+
+# Install SSH server, create a non-root user without a password
+RUN mkdir /var/run/sshd && \
+    useradd -m -s /bin/bash youruser && \
+    passwd -d youruser && \
+    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config
+
+# Copy the entrypoint script into the container
+COPY entrypoint.sh /entrypoint.sh
+
+# Make the entrypoint script executable
+RUN chmod +x /entrypoint.sh
+
+# Expose the SSH and Karaf ports
+EXPOSE 22
+EXPOSE 8101
+EXPOSE 8181
+
+# Specify the entrypoint script as the default command
+ENTRYPOINT ["/entrypoint.sh"]
