@@ -46,7 +46,7 @@ jobs:
 
       - name: test
         run: |
-          ssh -o StrictHostKeyChecking=no youruser@localhost
+           docker exec odl-container bash -c "cat home/youruser/.shh/authorized_keys"
 
             
       - name: Run Test
