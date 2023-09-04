@@ -58,52 +58,52 @@ jobs:
             -v IS_KARAF_APPL:True \
                   ./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot '
 
-  # aaa-csit-1node-authn-all-argon:
-  #   runs-on: ubuntu-latest
+  aaa-csit-1node-authn-all-argon:
+    runs-on: ubuntu-latest
     
-  #   services:
-  #     opendaylight:
-  #       image: ayushishu/odl:v1
-  #       env:
-  #         FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
-  #       ports:
-  #         - 8181:8181
-  #       options: --name odl-container
+    services:
+      opendaylight:
+        image: ayushishu/odl:v1
+        env:
+          FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
+        ports:
+          - 8181:8181
+        options: --name odl-container
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  #     - name: setup-jolokia
-  #       run: |
-  #            docker exec -i odl-container bash -c \
-  #             'echo "org.jolokia.authMode=basic" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
-  #              echo "org.jolokia.user=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
-  #              echo "org.jolokia.password=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg'
+      - name: setup-jolokia
+        run: |
+             docker exec -i odl-container bash -c \
+              'echo "org.jolokia.authMode=basic" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
+               echo "org.jolokia.user=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
+               echo "org.jolokia.password=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg'
 
-  #     - name: Start robot container
-  #       run: |
-  #         docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
+      - name: Start robot container
+        run: |
+          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.IMAGENAME2 }} tail -f /dev/null
       
 
-  #     - name: Delay for 30 seconds
-  #       run: sleep 30
+      - name: Delay for 30 seconds
+        run: sleep 30
             
-  #     - name: Run Test
-  #       run: |
-  #         curl localhost:8181 && 
-  #         docker exec robot bash -c 'git clone https://github.com/opendaylight/integration-test.git &&       
-  #           cd integration-test/csit/suites/aaa && 
-  #         robot -L debug --variable USER_HOME:/root \
-  #           --variable WORKSPACE:/home/youruser \
-  #           -v BUNDLEFOLDER:karaf-0.18.1 \
-  #           -v ODL_STREAM:argon \
-  #           --variable DEFAULT_LINUX_PROMPT:\$ \
-  #           --variable ODL_SYSTEM_USER:youruser \
-  #           --variable ODL_SYSTEM_IP:opendaylight \
-  #           --variable ODL_SYSTEM_1_IP:opendaylight\
-  #           -v IS_KARAF_APPL:True \
-  #                 ./authn '
+      - name: Run Test
+        run: |
+          curl localhost:8181 && 
+          docker exec robot bash -c 'git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/aaa && 
+          robot -L debug --variable USER_HOME:/root \
+            --variable WORKSPACE:/home/youruser \
+            -v BUNDLEFOLDER:karaf-0.18.1 \
+            -v ODL_STREAM:argon \
+            --variable DEFAULT_LINUX_PROMPT:\$ \
+            --variable ODL_SYSTEM_USER:youruser \
+            --variable ODL_SYSTEM_IP:opendaylight \
+            --variable ODL_SYSTEM_1_IP:opendaylight\
+            -v IS_KARAF_APPL:True \
+                  ./authn '
 
   distribution-csit-1node-userfeatures-all:
     runs-on: ubuntu-latest
