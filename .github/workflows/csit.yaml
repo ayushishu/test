@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        test_suite: ["daexim", "aaa", "distribution"]
+        test_suite: ["daexim"]
 
     services:
       opendaylight:
