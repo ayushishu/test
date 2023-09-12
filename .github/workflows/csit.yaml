@@ -6,6 +6,7 @@ on:
       - main  # Adjust the branch name as needed
 
 jobs:
+
   daexim-csit-1-node-argon:
     runs-on: ubuntu-latest
 
