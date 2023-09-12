@@ -30,7 +30,7 @@ jobs:
 
       - name: Start robot container
         run: |
-          docker run -d --network container:odl-container --name robot ${{ secrets.REPOSITORY }}/${{ secrets.ROBOT_IMAGE }} tail -f /dev/null
+          docker run -d --network container:odl-container --name robot ayushishu/robot-base-image tail -f /dev/null
 
       - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
