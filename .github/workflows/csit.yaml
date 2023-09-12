@@ -2,29 +2,61 @@ name: CSIT-1-Node-Test
 
 on:
   push:
-    branches:
-      - main  # Adjust the branch name as needed
 
 jobs:
-
-  daexim-csit-1-node-argon:
+  - name: Run Daexim Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test_suite: ["daexim", "aaa", "distribution"]
 
-    env:  # Set the environment variable for the daexim test suite
-      suite: daexim
+    services:
+      opendaylight:
+        image: ${{ vars.REPOSITORY }}/odl:v1
+        env:
+          FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
+        ports:
+          - 8181:8181
+        options: --name odl-container
 
     steps:
-      - name: Include run-test workflow for daexim
-        uses: ./.github/workflows/run-test.yml
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-  aaa-csit-1-node-authn-all-argon:
-    runs-on: ubuntu-latest
+      - name: Setup SSH
+        run: |
+          docker exec odl-container bash -c "mkdir -p /home/youruser/.ssh && touch /home/youruser/.ssh/authorized_keys"
 
-    env:  # Set the environment variable for the aaa test suite
-      suite: aaa
+      - name: Start robot container
+        run: |
+          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/robot-base-image tail -f /dev/null
 
-    steps:
-      - name: Include run-test workflow for aaa
-        uses: ./.github/workflows/run-test.yml
+      - name: Extract id_rsa.pub from the robot container
+        id: extract_pubkey
+        run: |
+          docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
+        continue-on-error: true
 
-  # Add similar jobs for other test suites as needed
+      - name: Add public key to opendaylight container
+        run: |
+          PUB_KEY=$(cat id_rsa.pub)
+          docker exec odl-container bash -c "mkdir -p /home/youruser/.ssh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
+
+      - name: Delay for 30 seconds
+        run: sleep 30
+
+      - name: Run Test
+        run: |
+          test_suite=${{ matrix.test_suite }}
+          docker exec robot bash -c "git clone https://github.com/opendaylight/integration-test.git &&       
+            cd integration-test/csit/suites/${test_suite} && 
+            robot -L debug --variable USER_HOME:/root \
+            --variable WORKSPACE:/home/youruser \
+            -v BUNDLEFOLDER:karaf-0.18.1 \
+            -v ODL_STREAM:argon \
+            --variable DEFAULT_LINUX_PROMPT:\$ \
+            --variable ODL_SYSTEM_USER:youruser \
+            --variable ODL_SYSTEM_IP:opendaylight \
+            --variable ODL_SYSTEM_1_IP:opendaylight \
+            -v IS_KARAF_APPL:True \
+            ./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot"
