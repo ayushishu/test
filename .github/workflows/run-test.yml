@@ -9,7 +9,7 @@ jobs:
 
     services:
       opendaylight:
-        image: ${{ vars.REPOSITORY }}/${{ vars.ODL_IMAGE }}
+        image: ayushishu/odl:v1
         env:
           FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
         ports:
