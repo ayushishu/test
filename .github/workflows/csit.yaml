@@ -1,15 +1,18 @@
-name: CSIT-1-Node-Testr
+name: CSIT-1-Node-Test
 
 on:
   push:
+    # Trigger the workflow on a push event
 
 jobs:
-  csit:
+  csit-1-node:
     runs-on: ubuntu-latest
+    # Run the job on an Ubuntu latest runner
 
     strategy:
       matrix:
-        test_suite: ["daexim","distribution","aaa"]
+        test_suite: ["daexim", "distribution", "aaa"]
+        # Define a matrix for different test suites
 
     services:
       opendaylight:
@@ -19,43 +22,52 @@ jobs:
         ports:
           - 8181:8181
         options: --name odl-container
+        # Set up a service container for OpenDaylight
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+        # Checkout the code repository
+
       - name: Setup Jolokia for AAA
         if: matrix.test_suite == 'aaa'
         run: |
+          # Configure Jolokia for the 'aaa' test suite
           docker exec -i odl-container bash -c \
           'echo "org.jolokia.authMode=basic" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
           echo "org.jolokia.user=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
           echo "org.jolokia.password=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg'
-      
+
       - name: Setup SSH
         run: |
+          # Set up SSH in the container
           docker exec odl-container bash -c "mkdir -p /home/youruser/.ssh && touch /home/youruser/.ssh/authorized_keys"
 
       - name: Start robot container
         run: |
+          # Start the robot container
           docker run -d --network container:odl-container --name robot ayushishu/robot-base-image tail -f /dev/null
 
       - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
         run: |
+          # Extract the id_rsa.pub from the robot container
           docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
         continue-on-error: true
 
       - name: Add public key to opendaylight container
         run: |
+          # Add the public key to the OpenDaylight container
           PUB_KEY=$(cat id_rsa.pub)
           docker exec odl-container bash -c "mkdir -p /home/youruser/.ssh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
 
       - name: Delay for 30 seconds
         run: sleep 30
+        # Delay for 30 seconds
 
       - name: Run Test
         run: |
+          # Define test_suite variable based on the matrix
           test_suite=${{ matrix.test_suite }}
           if [ "${{ matrix.test_suite }}" == "daexim" ]; then
             robot_test_file="./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot"
@@ -64,6 +76,7 @@ jobs:
           elif [ "${{ matrix.test_suite }}" == "aaa" ]; then
             robot_test_file="authn"           
           fi
+          # Run robot tests in the appropriate directory
           docker exec robot bash -c "git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/${test_suite} && 
             robot -L debug --variable USER_HOME:/root \
@@ -76,3 +89,4 @@ jobs:
               --variable ODL_SYSTEM_1_IP:opendaylight \
               -v IS_KARAF_APPL:True \
               $robot_test_file"
+        # Run the Robot Framework tests
