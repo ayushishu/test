@@ -62,6 +62,8 @@ jobs:
             robot_test_file="./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot"
           elif [ "${{ matrix.test_suite }}" == "distribution" ]; then
             robot_test_file="karaf_sequence_install.robot karaf_stop.robot size.robot"
+          elif [ "${{ matrix.test_suite }}" == "aaa" ]; then
+            robot_test_file="/authn"           
           fi
           docker exec robot bash -c "git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/${test_suite} && 
