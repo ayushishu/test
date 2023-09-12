@@ -10,6 +10,8 @@ jobs:
     strategy:
       matrix:
         test_suite: ["daexim"]
+        robot_test_file: ["./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot"]
+
 
     services:
       opendaylight:
@@ -49,6 +51,7 @@ jobs:
       - name: Run Test
         run: |
           test_suite=${{ matrix.test_suite }}
+          robot_test_file=${{ matrix.robot_test_file }}
           docker exec robot bash -c "git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/${test_suite} && 
             robot -L debug --variable USER_HOME:/root \
