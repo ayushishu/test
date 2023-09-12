@@ -1,4 +1,4 @@
-name: CSIT-1-Node-Test
+name: CSIT-1-Node-Test-v1
 
 on:
   push:
