@@ -23,14 +23,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: setup-jolokia
+      
+      - name: Setup Jolokia for AAA
+        if: matrix.test_suite == 'aaa'
         run: |
-            if [ "${{ matrix.test_suite }}" == "aaa" ]; then
-                docker exec -i odl-container bash -c \
-                'echo "org.jolokia.authMode=basic" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
-                echo "org.jolokia.user=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
-                echo "org.jolokia.password=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg'
-        
+          docker exec -i odl-container bash -c \
+          'echo "org.jolokia.authMode=basic" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
+          echo "org.jolokia.user=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg && \
+          echo "org.jolokia.password=admin" >> /home/youruser/karaf-0.18.1/etc/org.jolokia.osgi.cfg'
+      
       - name: Setup SSH
         run: |
           docker exec odl-container bash -c "mkdir -p /home/youruser/.ssh && touch /home/youruser/.ssh/authorized_keys"
