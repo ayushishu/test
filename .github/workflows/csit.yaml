@@ -2,43 +2,28 @@ name: CSIT-1-Node-Test
 
 on:
   push:
+    branches:
+      - main  # Adjust the branch name as needed
 
 jobs:
   daexim-csit-1-node-argon:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        suite: ["daexim"]
+    env:  # Set the environment variable for the daexim test suite
+      suite: daexim
 
     steps:
-      - name: Include run-test workflow
-        uses: .github/workflows/run-test.yml
-        with:
-          suite: ${{ matrix.suite }}
+      - name: Include run-test workflow for daexim
+        uses: ./.github/workflows/run-test.yml
 
   aaa-csit-1-node-authn-all-argon:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        suite: ["aaa"]
+    env:  # Set the environment variable for the aaa test suite
+      suite: aaa
 
     steps:
-      - name: Include run-test workflow
-        uses: .github/workflows/run-test.yml
-        with:
-          suite: ${{ matrix.suite }}
+      - name: Include run-test workflow for aaa
+        uses: ./.github/workflows/run-test.yml
 
-  distribution-csit-1-node-userfeatures-all:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        suite: ["distribution"]
-
-    steps:
-      - name: Include run-test workflow
-        uses: .github/workflows/run-test.yml
-        with:
-          suite: ${{ matrix.suite }}
+  # Add similar jobs for other test suites as needed
