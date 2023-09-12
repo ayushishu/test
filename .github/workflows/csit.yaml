@@ -12,7 +12,7 @@ jobs:
 
     services:
       opendaylight:
-        image: ${{ vars.REPOSITORY }}/odl:v1
+        image: ${{ vars.REPOSITORY }}/${{ vars.ODL_IMAGE }}
         env:
           FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
         ports:
@@ -29,7 +29,7 @@ jobs:
 
       - name: Start robot container
         run: |
-          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/robot-base-image tail -f /dev/null
+          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.ROBOT_IMAGE }} tail -f /dev/null
 
       - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
@@ -54,7 +54,7 @@ jobs:
             --variable WORKSPACE:/home/youruser \
             -v BUNDLEFOLDER:karaf-0.18.1 \
             -v ODL_STREAM:argon \
-            --variable DEFAULT_LINUX_PROMPT:\$ \
+            --variable DEFAULT_LINUX_PROMPT:\\\$ \
             --variable ODL_SYSTEM_USER:youruser \
             --variable ODL_SYSTEM_IP:opendaylight \
             --variable ODL_SYSTEM_1_IP:opendaylight \
