@@ -14,7 +14,7 @@ jobs:
 
     services:
       opendaylight:
-        image: ${{ vars.REPOSITORY }}/${{ vars.ODL_IMAGE }}
+        image: ayushishu/odl:v1
         env:
           FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
         ports:
@@ -24,8 +24,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: ssh
+        run: |
+          docker exec odl-container bash -c "mkdir /home/youruser/.ssh && touch /home/youruser/.ssh/authorized_keys"
+      - name: Start robot container
+        run: |
+          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.ROBOT_IMAGE }} tail -f /dev/null
+      - name: Extract id_rsa.pub from the robot container
+        id: extract_pubkey
+        run: |
+          docker exec robot cat /root/.ssh/id_rsa.pub > id_rsa.pub
+        continue-on-error: true
 
-      # ... (rest of the steps)
+      - name: Add public key to opendaylight container
+        run: |
+          PUB_KEY=$(cat id_rsa.pub)
+          docker exec odl-container bash -c "mkdir /home/youruser/.shh && echo \"$PUB_KEY\" >> /home/youruser/.ssh/authorized_keys"
+      - name: Delay for 30 seconds
+        run: sleep 30
 
       - name: Run Test
         run: |
