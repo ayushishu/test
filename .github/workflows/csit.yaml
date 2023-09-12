@@ -10,8 +10,6 @@ jobs:
     strategy:
       matrix:
         test_suite: ["daexim","distribution"]
-        robot_test_file: ["./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot","karaf_sequence_install.robot karaf_stop.robot size.robot"]
-
 
     services:
       opendaylight:
@@ -51,7 +49,12 @@ jobs:
       - name: Run Test
         run: |
           test_suite=${{ matrix.test_suite }}
-          robot_test_file=${{ matrix.robot_test_file }}
+          robot_test_file=""
+          if [ "${{ matrix.test_suite }}" == "daexim" ]; then
+            robot_test_file="./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot"
+          elif [ "${{ matrix.test_suite }}" == "distribution" ]; then
+            robot_test_file="karaf_sequence_install.robot karaf_stop.robot size.robot"
+          fi
           docker exec robot bash -c "git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/${test_suite} && 
             robot -L debug --variable USER_HOME:/root \
@@ -63,4 +66,4 @@ jobs:
               --variable ODL_SYSTEM_IP:opendaylight \
               --variable ODL_SYSTEM_1_IP:opendaylight \
               -v IS_KARAF_APPL:True \
-              $(robot_test_file)"
+              $robot_test_file"
