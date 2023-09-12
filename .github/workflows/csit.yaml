@@ -4,15 +4,16 @@ on:
   push:
 
 jobs:
-  - name: Run Daexim Test
+  csit:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         test_suite: ["daexim", "aaa", "distribution"]
 
     services:
       opendaylight:
-        image: ${{ vars.REPOSITORY }}/${{ vars.ODL_IMAGE }}
+        image: ayushishu/odl:v1
         env:
           FEATURES: odl-restconf,odl-daexim-all,odl-netconf-topology,odl-jolokia
         ports:
@@ -29,7 +30,7 @@ jobs:
 
       - name: Start robot container
         run: |
-          docker run -d --network container:odl-container --name robot ${{ vars.REPOSITORY }}/${{ vars.ROBOT_IMAGE }} tail -f /dev/null
+          docker run -d --network container:odl-container --name robot ${{ secrets.REPOSITORY }}/${{ secrets.ROBOT_IMAGE }} tail -f /dev/null
 
       - name: Extract id_rsa.pub from the robot container
         id: extract_pubkey
@@ -51,12 +52,12 @@ jobs:
           docker exec robot bash -c "git clone https://github.com/opendaylight/integration-test.git &&       
             cd integration-test/csit/suites/${test_suite} && 
             robot -L debug --variable USER_HOME:/root \
-            --variable WORKSPACE:/home/youruser \
-            -v BUNDLEFOLDER:karaf-0.18.1 \
-            -v ODL_STREAM:argon \
-            --variable DEFAULT_LINUX_PROMPT:\\\$ \
-            --variable ODL_SYSTEM_USER:youruser \
-            --variable ODL_SYSTEM_IP:opendaylight \
-            --variable ODL_SYSTEM_1_IP:opendaylight \
-            -v IS_KARAF_APPL:True \
-            ./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot"
+              --variable WORKSPACE:/home/youruser \
+              -v BUNDLEFOLDER:karaf-0.18.1 \
+              -v ODL_STREAM:argon \
+              --variable DEFAULT_LINUX_PROMPT:\\\$ \
+              --variable ODL_SYSTEM_USER:youruser \
+              --variable ODL_SYSTEM_IP:opendaylight \
+              --variable ODL_SYSTEM_1_IP:opendaylight \
+              -v IS_KARAF_APPL:True \
+              ./010-special-export.robot 020-import-basic.robot 030-export-basic.robot 040-export-inclusions.robot"
